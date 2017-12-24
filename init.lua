@@ -1,5 +1,5 @@
 --------------------------------------------------------
--- Minetest :: Giftbox Mod v2.0 alpha (giftbox)
+-- Minetest :: Giftbox Mod v2.0 (giftbox)
 --
 -- See README.txt for licensing and other information.
 -- Copyright (c) 2016-2017, Leslie Ellen Krause
@@ -28,19 +28,18 @@ local box_colors = { "black", "blue", "cyan", "green", "magenta", "red", "white"
 	-- white = white + grey
 	-- yellow = yellow + green
 
-minetest.register_node( "giftbox:giftbox", {
+minetest.register_node( "giftbox:present", {
 	description = "Gift Box",
-        tiles = { "giftbox_top.png", "giftbox_bottom.png", "giftbox_side.png",
-                "giftbox_side.png", "giftbox_side.png", "giftbox_side.png" },
+        tiles = { "present_top.png", "present_bottom.png", "present_side.png",
+                "present_side.png", "present_side.png", "present_side.png" },
         is_ground_content = false,
         groups = { choppy = 2, oddly_breakable_by_hand = 2 },
         sounds = default.node_sound_wood_defaults( ),
 
+	drop = { },
+
 	after_place_node = function( pos, player )
-		local owner = player:get_player_name( ) or "singleplayer"
-		local meta = minetest.get_meta( pos )
---		meta:set_string( "owner", owner )
-		meta:set_string( "infotext", giftbox.present_infotext .. " (placed by " .. owner .. ")" )
+		minetest.get_meta( pos ):set_string( "infotext", giftbox.present_infotext .. " (placed by " .. player:get_player_name( ) .. ")" )
 	end,
         on_construct = function ( pos )
 		local meta = minetest.get_meta( pos )
@@ -52,7 +51,10 @@ minetest.register_node( "giftbox:giftbox", {
 		return not minetest.is_protected( pos, player:get_player_name( ) ) and default.is_empty( pos )
 	end,
 	allow_metadata_inventory_take = function( pos, listname, index, stack, player )
-		if not default.is_owner( pos, player ) then
+		-- only allow receiver to take item and remove node
+		-- of course, placer can already bypass protection
+
+		if minetest.is_protected( pos, player:get_player_name( ) ) then
 			return 0
 		end
 		return stack:get_count( )
@@ -86,7 +88,10 @@ minetest.register_node( "giftbox:giftbox", {
 				slot = slot + 1
 	                end
 			return string.format( formspec, spos )
-		elseif not minetest.is_protected( pos, pname ) then
+		elseif not minetest.is_protected( pos, pname ) and not default.is_empty( pos ) then
+			-- only show formspec if placer remembered to select item
+			-- otherwise, allow node be dug normally (but no drops)
+
 			local formspec =
 				"size[10,6.5]" ..
 				"image[0,0;12,6;" .. giftbox.present_greeting .. "]" ..
@@ -136,16 +141,35 @@ for i, color in ipairs( box_colors ) do
 		},
 
 		drop = { max_items = 1,	items = giftbox.giftbox_drops },
-	
-		after_place_node = function( pos, player )
-			-- initial item string: Gift Box (placed by sorcerykid)
 
+		on_dig = function( pos, node, player )
+			local digger = player:get_player_name( )
+			local receiver = minetest.get_meta( pos ):get_string( "receiver" )
+
+			if default.is_owner( pos, player ) then
+				-- always allow owner to dig node, but still obey protection
+				minetest.handle_node_drops( pos, { node.name }, player )
+				minetest.remove_node( pos )
+
+			elseif receiver == digger or receiver == default.OWNER_NOBODY then
+				-- otherwise drop random items directly for receiver (if any)
+				-- this is necessary to bypass protection checks
+				local drops = minetest.get_node_drops( node.name, player:get_wielded_item( ):get_name( ) )
+
+				minetest.handle_node_drops( pos, drops, player )
+				minetest.remove_node( pos )
+			end
+		end,
+		after_place_node = function( pos, player )
 			local placer = player:get_player_name( ) or "singleplayer"
 			local meta = minetest.get_meta( pos )
-			meta:set_string( "owner", default.OWNER_NOBODY )
-			meta:set_string( "placer", placer )
+
+			default.set_owner( pos, placer )
+			meta:set_string( "receiver", "" )
 			meta:set_string( "is_anonymous", "false" )
-			meta:set_string( "infotext", "Public Gift Box (from " .. placer .. ")" )
+
+			-- initial item string: Gift Box (placed by sorcerykid)
+			meta:set_string( "infotext", giftbox.giftbox_public_infotext1 .. " (from " .. placer .. ")" )
 		end,
 		on_open = function( pos, player, fields )
 			local meta = minetest.get_meta( pos )
@@ -154,61 +178,65 @@ for i, color in ipairs( box_colors ) do
 				default.gui_bg ..
 				default.gui_bg_img ..
 				"button_exit[6,2.5;2,0.3;save;Save]" ..
-				"checkbox[6,1.6;is_anonymous;Anonymous Sender;" .. meta:get_string( "is_anonymous" ) .. "]" ..
+				"checkbox[4.5,1.3;is_anonymous;Anonymous Gift;" .. meta:get_string( "is_anonymous" ) .. "]" ..
 				"label[0.1,0;Personalize your holiday greeting (or leave blank for the default):]" ..
-				"field[0.4,1;7.5,0.25;message;;" .. meta:get_string( "message" ) .. "]" ..
+				"field[0.4,1;7.8,0.25;message;;" .. meta:get_string( "message" ) .. "]" ..
 				"label[0.1,1.5;Recipient:]" ..
-				"field[1.8,1.9;3.5,0.25;owner;;" .. meta:get_string( "owner" ) .. "]"
+				"field[1.8,1.9;2.5,0.25;receiver;;" .. meta:get_string( "receiver" ) .. "]"
 
 			-- only placer of gift box should edit properties, not the receiver
-			if meta:get_string( "placer" ) ~= placer then
+			if default.is_owner( pos, player ) then
 				return formspec
         		end        
 		end,
 	        on_close = function( pos, player, fields )
-			local placer = player:get_player_name( )
+			local owner = player:get_player_name( )
 			local meta = minetest.get_meta( pos )
 
 			-- only placer of gift box should edit properties, not the receiver
-			if meta:get_string( "placer" ) ~= placer then return end
+			if not default.is_owner( pos, player ) then return end
 
 			if fields.is_anonymous then
 				-- in next version of active formspecs, we should save checkbox state
 				-- in form meta first rather than directly to node meta
 				meta:set_string( "is_anonymous", fields.is_anonymous )
 
-			elseif fields.save and fields.message and fields.owner then
+			elseif fields.save and fields.message and fields.receiver then
 				local infotext
 
 				if string.len( fields.message ) > 50 then
-					minetest.chat_send_player( placer, "The specified message is too long." )
+					minetest.chat_send_player( owner, "The specified message is too long." )
 					return
-				elseif fields.owner == placer then
-					minetest.chat_send_player( placer, "You cannot send a gift to yourself." )
+				elseif fields.receiver == owner then
+					minetest.chat_send_player( owner, "You cannot give a gift to yourself." )
 					return
-				elseif not "" and not string.find( fields.owner, "^[_A-Za-z0-9]+$" ) then
-					minetest.chat_send_player( placer, "The specified recipient is invalid." )
+				elseif fields.receiver ~= "" and not string.find( fields.receiver, "^[_A-Za-z0-9]+$" ) then
+					minetest.chat_send_player( owner, "The specified recipient is invalid." )
 					return
 				end
 
 				-- item string with message: Dear sorcerykid: "Happy holidays!" (placed by sorcerykid)
 				-- item string without message: Gift Box for maikerumine (placed by sorcerykid)
 				
-				if fields.owner == default.OWNER_NOBODY then
+				if fields.receiver == default.OWNER_NOBODY then
 					-- public gift box
-					infotext = fields.message == "" and "Gift Box" or "\"" .. fields.message .. "\""
+					infotext = fields.message == "" and
+						giftbox.giftbox_public_infotext1 or
+						string.format( giftbox.giftbox_public_infotext2, fields.message )
 				else
 					-- private gift box
-					infotext = fields.message == "" and "Gift Box for " .. fields.owner or "Dear " .. fields.owner .. ": \"" .. fields.message .. "\""
+					infotext = fields.message == "" and
+						string.format( giftbox.giftbox_private_infotext1, fields.receiver ) or
+						string.format( giftbox.giftbox_private_infotext2, fields.receiver, fields.message )
 				end
 
 				if meta:get_string( "is_anonymous" ) == "false" then
-					infotext = infotext .. " (from " .. placer .. ")"
+					infotext = infotext .. " (from " .. owner .. ")"
 				end
 
 				minetest.log( "action", string.format( default.STATUS_SIGNATURE_SET, player:get_player_name( ), fields.message, "giftbox", minetest.pos_to_string( pos ) ) )
 
-				meta:set_string( "owner", fields.owner )
+				meta:set_string( "receiver", fields.receiver )
 				meta:set_string( "message", fields.message )
 				meta:set_string( "infotext", infotext )
 			end
@@ -241,3 +269,5 @@ minetest.register_alias( "mt_seasons:gift_box_magenta", "giftbox:giftbox_magenta
 minetest.register_alias( "mt_seasons:gift_box_yellow", "giftbox:giftbox_yellow" )
 minetest.register_alias( "mt_seasons:gift_box_white", "giftbox:giftbox_white" )
 minetest.register_alias( "mt_seasons:gift_box_black", "giftbox:giftbox_black" )
+
+minetest.register_alias( "giftbox:giftbox", "giftbox:present" )

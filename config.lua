@@ -35,6 +35,11 @@ giftbox.present_items = {
 	"default:meselamp 10",
 }
 
+giftbox.giftbox_public_infotext1 = "Gift Box"
+giftbox.giftbox_public_infotext2 = "'%s'"
+giftbox.giftbox_private_infotext1 = "Gift Box for %s"
+giftbox.giftbox_private_infotext2 = "Dear %s: '%s'"
+
 giftbox.giftbox_drops = {
 	-- digging gift box allows for a single drop of items with a given a rarity
 	{ items = { "default:sword_diamond" }, rarity = 50 },
@@ -43,9 +48,6 @@ giftbox.giftbox_drops = {
 	{ items = { "default:pick_diamond" }, rarity = 50 },
 	{ items = { "default:pick_bronze" }, rarity = 25 },
 
-	{ items = { "default:gold_lump 5" }, rarity = 10 },
-	{ items = { "default:coal_lump 10" }, rarity = 10 },
-
 	-- default drop must be placed last and have rarity of 0 to avoid empty drops
-	{ items = { "farming:gingerbread_cookie 5", "farming:candycane 10" }, rarity = 0 },
+	{ items = { "default:gold_lump 5", "default:coal_lump 10" }, rarity = 0 },
 }
