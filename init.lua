@@ -1,5 +1,5 @@
 --------------------------------------------------------
--- Minetest :: Giftbox Mod v2.0 (giftbox)
+-- Minetest :: Giftbox Mod v2.1 (giftbox)
 --
 -- See README.txt for licensing and other information.
 -- Copyright (c) 2016-2017, Leslie Ellen Krause
@@ -145,8 +145,9 @@ for i, color in ipairs( box_colors ) do
 		on_dig = function( pos, node, player )
 			local digger = player:get_player_name( )
 			local receiver = minetest.get_meta( pos ):get_string( "receiver" )
+		--	local is_protected = minetest.get_meta( pos ):get_string( "is_protected" ) == "true"
 
-			if default.is_owner( pos, player ) then
+			if not minetest.is_protected( pos, digger ) then
 				-- always allow owner to dig node, but still obey protection
 				minetest.handle_node_drops( pos, { node.name }, player )
 				minetest.remove_node( pos )
@@ -180,7 +181,7 @@ for i, color in ipairs( box_colors ) do
 				"button_exit[6,2.5;2,0.3;save;Save]" ..
 				"checkbox[4.5,1.3;is_anonymous;Anonymous Gift;" .. meta:get_string( "is_anonymous" ) .. "]" ..
 				"label[0.1,0;Personalize your holiday greeting (or leave blank for the default):]" ..
-				"field[0.4,1;7.8,0.25;message;;" .. meta:get_string( "message" ) .. "]" ..
+				"field[0.4,1;7.8,0.25;message;;" .. minetest.formspec_escape( meta:get_string( "message" ) ) .. "]" ..
 				"label[0.1,1.5;Recipient:]" ..
 				"field[1.8,1.9;2.5,0.25;receiver;;" .. meta:get_string( "receiver" ) .. "]"
 
@@ -204,7 +205,10 @@ for i, color in ipairs( box_colors ) do
 			elseif fields.save and fields.message and fields.receiver then
 				local infotext
 
-				if string.len( fields.message ) > 50 then
+				if fields.message ~= "" and string.len( fields.message ) < 5 then
+					minetest.chat_send_player( owner, "The specified message is too short." )
+					return
+				elseif string.len( fields.message ) > 250 then
 					minetest.chat_send_player( owner, "The specified message is too long." )
 					return
 				elseif fields.receiver == owner then

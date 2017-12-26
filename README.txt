@@ -1,5 +1,5 @@
 ==========================================================
-Giftbox Mod v2.0 by sorcerykid
+Giftbox Mod v2.1 by sorcerykid
 
 https://forum.minetest.net/viewtopic.php?f=9&t=19133
 

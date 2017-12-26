@@ -35,6 +35,8 @@ giftbox.present_items = {
 	"default:meselamp 10",
 }
 
+giftbox.giftbox_message_length_min = 5
+giftbox.giftbox_message_length_max = 150
 giftbox.giftbox_public_infotext1 = "Gift Box"
 giftbox.giftbox_public_infotext2 = "'%s'"
 giftbox.giftbox_private_infotext1 = "Gift Box for %s"
@@ -42,12 +44,27 @@ giftbox.giftbox_private_infotext2 = "Dear %s: '%s'"
 
 giftbox.giftbox_drops = {
 	-- digging gift box allows for a single drop of items with a given a rarity
-	{ items = { "default:sword_diamond" }, rarity = 50 },
-	{ items = { "default:sword_bronze" }, rarity = 25 },
+	{ items = { "default:mese" }, rarity = 75 },
+	{ items = { "protector:protect" }, rarity = 75 },
 
-	{ items = { "default:pick_diamond" }, rarity = 50 },
-	{ items = { "default:pick_bronze" }, rarity = 25 },
+	{ items = { "default:diamondblock" }, rarity = 50 },
+	{ items = { "default:goldblock" }, rarity = 50 },
+
+	{ items = { "default:coalblock 10" }, rarity = 25 },
+	{ items = { "default:obsidian 20" }, rarity = 25 },
+
+	{ items = { "default:sword_diamond" }, rarity = 20 },
+	{ items = { "default:sword_bronze" }, rarity = 10 },
+
+	{ items = { "default:pick_diamond" }, rarity = 20 },
+	{ items = { "default:pick_bronze" }, rarity = 10 },
+
+	{ items = { "default:gold_lump 10" }, rarity = 5 },
+	{ items = { "default:coal_lump 20" }, rarity = 5 },
+
+	{ items = { "default:orange 20" }, rarity = 5 },
+	{ items = { "default:apple 30" }, rarity = 5 },
 
 	-- default drop must be placed last and have rarity of 0 to avoid empty drops
-	{ items = { "default:gold_lump 5", "default:coal_lump 10" }, rarity = 0 },
+	{ items = { "farming:gingerbread_cookie 5", "farming:candycane 10" }, rarity = 0 },
 }
