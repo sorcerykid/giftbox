@@ -1,15 +1,97 @@
-==========================================================
-Giftbox Mod v2.1 by sorcerykid
+Giftbox Mod v2.2
+By Leslie E. Krause
 
 https://forum.minetest.net/viewtopic.php?f=9&t=19133
 
+Repository
+----------------------
 
-License of source code
+Browse source code:
+  https://bitbucket.org/sorcerykid/giftbox
+
+Download archive:
+  https://bitbucket.org/sorcerykid/giftbox/get/master.zip
+  https://bitbucket.org/sorcerykid/giftbox/get/master.tar.gz
+
+Revision History
+----------------------
+
+Version 1.0b (12-Jan-2018)
+  - initial version within doors mod
+
+Version 2.0 (31-Aug-2018)
+  - separated common routines into standalone mod
+  - included support files for public release
+
+Version 1.0a (Build 01)
+  - initial build
+
+Version 1.1a (Build 02)
+  - moved configuration settings into separate file
+  - made infotext of admin giftbox configurable
+  - made background of admin giftbox configurable
+  - changed debug log messages into tokenized strings
+
+Version 2.0b (Build 03)
+  - merged colored giftboxes from mt_seasons mod
+  - added aliases for original colored giftboxes
+  - improved end-user customizations of giftbox
+
+Version 2.0 (Build 04)
+  - renamed admin giftbox to "present" for distinction
+  - created textures for newly registered nodes
+  - renamed associated texture files of present
+  - replaced owner meta for present with sender instead
+  - added protection check to inventory take of present
+  - disabled formspec for recipient of empty present
+  - added sender/receiver checks when digging giftbox
+  - made default infotext of giftbox configurable
+  - changed owner of giftbox to placer for simplicity
+  - set default receiver of giftbox during placement
+  - switched all prior references of owner to receiver
+  - registered alias for original admin giftbox
+
+Version 2.1 (Build 05)
+  - escaped giftbox message in formspec string
+  - improved validation of giftbox message input
+
+Version 2.2 (Build 06)
+  - added dependency for formspecs and ownership mods
+  - introduced packages with specialized behavior
+  - created textures for newly registered items
+  - fixed regex during validation of recipient names
+  - fixed erroneous checks against unowned nodes
+  - general code refactoring and reformatting
+
+Dependencies
+----------------------
+
+Default Mod (required)
+  https://github.com/minetest/minetest_game/default
+
+ActiveFormspecs Mod (required)
+  https://bitbucket.org/sorcerykid/formspecs
+
+Basic Ownership Mod (required)
+  https://bitbucket.org/sorcerykid/ownership
+
+Compatability
+----------------------
+
+Minetest 0.4.15+ required
+
+Installation
+----------------------
+
+  1) Unzip the archive into the mods directory of your game
+  2) Rename the giftbox-master directory to "giftbox"
+
+Source Code License
 ----------------------------------------------------------
 
 GNU Lesser General Public License v3 (LGPL-3.0)
 
-Copyright (c) 2016-2017, Leslie E. Krause
+Copyright (c) 2016-2018, Leslie E. Krause
 
 Original source code by maikerumine:
 https://github.com/maikerumine/just_test_tribute/blob/master/mods/mt_seasons/nodes.lua
@@ -24,9 +106,7 @@ See the GNU Lesser General Public License for more details.
 
 http://www.gnu.org/licenses/lgpl-2.1.html
 
-
-
-License of media (textures, sounds, and models)
+Multimedia License (textures, sounds, and models)
 ----------------------------------------------------------
 
 Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
