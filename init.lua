@@ -259,7 +259,7 @@ minetest.register_craftitem( "giftbox:package_sealed", {
 } )
 
 minetest.register_craft( {
-	output = "giftbox:package_opened",
+	output = "giftbox:package_unsealed",
 	recipe = {
 		{ "default:paper", "default:paper", "default:paper" },
 		{ "default:paper", "", "default:paper" },

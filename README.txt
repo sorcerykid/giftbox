@@ -32,7 +32,7 @@ Version 1.1a (Build 02)
   - made background of admin giftbox configurable
   - changed debug log messages into tokenized strings
 
-Version 2.0b (Build 03)
+Version 2.0 (Build 03)
   - merged colored giftboxes from mt_seasons mod
   - added aliases for original colored giftboxes
   - improved end-user customizations of giftbox
@@ -62,6 +62,9 @@ Version 2.2 (Build 06)
   - fixed regex during validation of recipient names
   - fixed erroneous checks against unowned nodes
   - general code refactoring and reformatting
+
+Version 2.2 (Build 07)
+  - fixed typo in craft recipe of unsealed package
 
 Dependencies
 ----------------------
