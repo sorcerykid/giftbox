@@ -1,7 +1,11 @@
-Giftbox Mod v2.2
+Giftbox Mod v2.3
 By Leslie E. Krause
 
+Giftbox provides an assortment user-customizable presents for special occasions, such as
+holidays and birthdays, in addition to craftable packages and presents.
+
 https://forum.minetest.net/viewtopic.php?f=9&t=19133
+
 
 Repository
 ----------------------
@@ -66,11 +70,14 @@ Version 2.2 (Build 06)
 Version 2.2 (Build 07)
   - fixed typo in craft recipe of unsealed package
 
+Version 2.3 (Build 08)
+  - switched all ownership checks to use player names
+
 Dependencies
 ----------------------
 
 Default Mod (required)
-  https://github.com/minetest/minetest_game/default
+  https://github.com/minetest-game-mods/default
 
 ActiveFormspecs Mod (required)
   https://bitbucket.org/sorcerykid/formspecs
@@ -86,8 +93,8 @@ Minetest 0.4.15+ required
 Installation
 ----------------------
 
-  1) Unzip the archive into the mods directory of your game
-  2) Rename the giftbox-master directory to "giftbox"
+  1) Unzip the archive into the mods directory of your game.
+  2) Rename the giftbox-master directory to "giftbox".
 
 Source Code License
 ----------------------------------------------------------

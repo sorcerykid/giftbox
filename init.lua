@@ -1,5 +1,5 @@
 --------------------------------------------------------
--- Minetest :: Giftbox Mod v2.2 (giftbox)
+-- Minetest :: Giftbox Mod v2.3 (giftbox)
 --
 -- See README.txt for licensing and other information.
 -- Copyright (c) 2016-2018, Leslie E. Krause
@@ -335,7 +335,7 @@ for i, color in ipairs( box_colors ) do
 				"field[1.8,1.9;2.5,0.25;receiver;;" .. meta:get_string( "receiver" ) .. "]"
 
 			-- only placer of gift box should edit properties, not the receiver
-			if default.is_owner( pos, player ) then
+			if default.is_owner( pos, player:get_player_name( ) ) then
 				return formspec
         		end        
 		end,
@@ -344,7 +344,7 @@ for i, color in ipairs( box_colors ) do
 			local meta = minetest.get_meta( pos )
 
 			-- only placer of gift box should edit properties, not the receiver
-			if not default.is_owner( pos, player ) then return end
+			if not default.is_owner( pos, owner ) then return end
 
 			if fields.is_anonymous then
 				-- in next version of active formspecs, we should save checkbox state
