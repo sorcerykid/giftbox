@@ -1,10 +1,9 @@
 -- giftbox mod configuration file
 
-giftbox.present_infotext = "Christmas Present"
-giftbox.present_greeting = "present_greeting.png"
-giftbox.package_viewer = "package_viewer.png"
+present_infotext = "Christmas Present"
+present_greeting = "present_greeting.png"
 
-giftbox.present_items = {
+present_items = {
 	"default:torch 60",
 	"default:apple 40",
 	"farming:bread 20",
@@ -36,26 +35,36 @@ giftbox.present_items = {
 	"default:meselamp 10",
 }
 
-giftbox.parcel_public_description = "Parcel"
-giftbox.parcel_private_description = "Parcel for %s"
+parcel_public_description = "Parcel"
+parcel_private_description = "Parcel for %s"
 
-giftbox.giftbox_public_infotext1 = "Gift Box"
-giftbox.giftbox_public_infotext2 = "'%s'"
-giftbox.giftbox_private_infotext1 = "Gift Box for %s"
-giftbox.giftbox_private_infotext2 = "Dear %s: '%s'"
+giftbox_message_length_min = 5
+giftbox_message_length_max = 150
+giftbox_public_infotext1 = "Gift Box"
+giftbox_public_infotext2 = "'%s'"
+giftbox_private_infotext1 = "Gift Box for %s"
+giftbox_private_infotext2 = "Dear %s: '%s'"
 
-giftbox.giftbox_drops = {
+giftbox_drops = {
 	-- digging gift box allows for a single drop of items with a given a rarity
-	{ items = { "default:sword_diamond" }, rarity = 50 },
-	{ items = { "default:sword_bronze" }, rarity = 25 },
+	{ items = { "default:diamondblock" }, rarity = 160 },
+	{ items = { "default:goldblock" }, rarity = 160 },
 
-	{ items = { "default:pick_diamond" }, rarity = 50 },
-	{ items = { "default:pick_bronze" }, rarity = 25 },
+	{ items = { "default:coalblock 10" }, rarity = 80 },
+	{ items = { "default:obsidian 5" }, rarity = 80 },
 
-	{ items = { "default:gold_lump 5" }, rarity = 10 },
-	{ items = { "default:coal_lump 10" }, rarity = 10 },
+	{ items = { "default:sword_diamond" }, rarity = 40 },
+	{ items = { "default:pick_diamond" }, rarity = 40 },
+
+	{ items = { "default:sword_bronze" }, rarity = 20 },
+	{ items = { "default:pick_bronze" }, rarity = 20 },
+
+	{ items = { "farming:gingerbread_cookie 10" }, rarity = 10 },
+	{ items = { "farming:candycane 5" }, rarity = 10 },
+
+	{ items = { "default:apple 30" }, rarity = 5 },
+	{ items = { "default:orange 15" }, rarity = 5 },
 
 	-- default drop must be placed last and have rarity of 0 to avoid empty drops
-	{ items = { "farming:gingerbread_cookie 5", "farming:candycane 10" }, rarity = 0 },
+	{ items = { "default:coal_lump" }, rarity = 0 },
 }
-

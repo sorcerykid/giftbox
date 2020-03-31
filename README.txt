@@ -1,4 +1,4 @@
-Giftbox Mod v2.3
+Giftbox Mod v2.4
 By Leslie E. Krause
 
 Giftbox provides an assortment user-customizable presents for special occasions, such as
@@ -72,6 +72,9 @@ Version 2.2 (Build 07)
 
 Version 2.3 (Build 08)
   - switched all ownership checks to use player names
+
+Version 2.4 (Build 09)
+  - migrated mod settings to configuration panel API
 
 Dependencies
 ----------------------

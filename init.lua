@@ -1,15 +1,15 @@
 --------------------------------------------------------
--- Minetest :: Giftbox Mod v2.3 (giftbox)
+-- Minetest :: Giftbox Mod v2.4 (giftbox)
 --
 -- See README.txt for licensing and other information.
--- Copyright (c) 2016-2018, Leslie E. Krause
+-- Copyright (c) 2016-2020, Leslie E. Krause
 --
 -- ./games/minetest_game/mods/giftbox/init.lua
 --------------------------------------------------------
 
 giftbox = { }
 
-dofile( minetest.get_modpath( "giftbox" ) .. "/config.lua" )
+local config = minetest.load_config( )
 
 local box_colors = { "black", "blue", "cyan", "green", "magenta", "red", "white", "yellow" }
 	-- black = black + grey
@@ -39,7 +39,7 @@ minetest.register_node( "giftbox:present", {
 	drop = { },
 
 	after_place_node = function ( pos, player )
-		minetest.get_meta( pos ):set_string( "infotext", giftbox.present_infotext .. " (placed by " .. player:get_player_name( ) .. ")" )
+		minetest.get_meta( pos ):set_string( "infotext", config.present_infotext .. " (placed by " .. player:get_player_name( ) .. ")" )
 	end,
 	on_construct = function ( pos )
 		local meta = minetest.get_meta( pos )
@@ -83,7 +83,7 @@ minetest.register_node( "giftbox:present", {
 				"list[nodemeta:%s;main;6,0.5;1,1;]"
 
 			slot = 0
-			for _, name in ipairs( giftbox.present_items ) do
+			for _, name in ipairs( config.present_items ) do
 				formspec = formspec .. "item_image_button[ " .. ( slot % 8 ) .. "," .. ( math.floor ( slot / 8 ) + 2 ) .. ";1,1;" .. name .. ";add " .. name .. ";]"
 				slot = slot + 1
 			end
@@ -94,7 +94,7 @@ minetest.register_node( "giftbox:present", {
 
 			local formspec =
 				"size[10,6.5]" ..
-				"image[0,0;12,6;" .. giftbox.present_greeting .. "]" ..
+				"image[0,0;12,6;" .. config.present_greeting .. "]" ..
 		        	default.gui_bg ..
         			default.gui_bg_img ..
 		        	default.gui_slots ..
@@ -145,7 +145,7 @@ minetest.register_craftitem( "giftbox:package_unsealed", {
 			local new_stack = ItemStack( "giftbox:package_sealed" )
 			local meta = new_stack:get_meta( )
 
-			meta:set_string( "description", giftbox.parcel_public_description ..
+			meta:set_string( "description", config.parcel_public_description ..
 				" (from " .. player_name .. " on " .. os.date( "%x" ) .. ")" )
 			meta:set_string( "timestamp", os.time( ) )
 			meta:set_string( "receiver", default.OWNER_NOBODY )
@@ -213,8 +213,8 @@ minetest.register_craftitem( "giftbox:package_sealed", {
 
 					-- public vs. private letters and parcels
 					local description = fields.receiver == default.OWNER_NOBODY and
-						giftbox.parcel_public_description or
-						string.format( giftbox.parcel_private_description, fields.receiver )
+						config.parcel_public_description or
+						string.format( config.parcel_private_description, fields.receiver )
 
 					if meta:get_string( "is_anonymous" ) == "false" then
 						description = description .. " (from " .. owner .. " on " .. os.date( "%x", tonumber( meta:get_string( "timestamp" ) ) ) .. ")"
@@ -232,7 +232,7 @@ minetest.register_craftitem( "giftbox:package_sealed", {
 				"size[9,7]" ..
 		        	default.gui_bg ..
         			default.gui_bg_img ..
-				"background[0,0;9,6;" .. giftbox.package_viewer .. "]" ..
+				"background[0,0;9,6;" .. config.package_viewer .. "]" ..
         			"label[0.5,0.5;" .. minetest.colorize( "#000000", os.date( "%x %X", tonumber( meta:get_string( "timestamp" ) ) ) ) .. "]" ..
         			"button_exit[3.0,6.5;3.0,0.3;open;Open Package]"
 
@@ -289,7 +289,7 @@ for i, color in ipairs( box_colors ) do
 			}
 		},
 
-		drop = { max_items = 1,	items = giftbox.giftbox_drops },
+		drop = { max_items = 1,	items = config.giftbox_drops },
 
 		on_dig = function ( pos, node, player )
 			local digger = player:get_player_name( )
@@ -319,7 +319,7 @@ for i, color in ipairs( box_colors ) do
 			meta:set_string( "is_anonymous", "false" )
 
 			-- initial item string: Gift Box (placed by sorcerykid)
-			meta:set_string( "infotext", giftbox.giftbox_public_infotext1 .. " (from " .. placer .. ")" )
+			meta:set_string( "infotext", config.giftbox_public_infotext1 .. " (from " .. placer .. ")" )
 		end,
 		on_open = function ( pos, player, fields )
 			local meta = minetest.get_meta( pos )
@@ -374,13 +374,13 @@ for i, color in ipairs( box_colors ) do
 				if fields.receiver == default.OWNER_NOBODY then
 					-- public gift box
 					infotext = fields.message == "" and
-						giftbox.giftbox_public_infotext1 or
-						string.format( giftbox.giftbox_public_infotext2, fields.message )
+						config.giftbox_public_infotext1 or
+						string.format( config.giftbox_public_infotext2, fields.message )
 				else
 					-- private gift box
 					infotext = fields.message == "" and
-						string.format( giftbox.giftbox_private_infotext1, fields.receiver ) or
-						string.format( giftbox.giftbox_private_infotext2, fields.receiver, fields.message )
+						string.format( config.giftbox_private_infotext1, fields.receiver ) or
+						string.format( config.giftbox_private_infotext2, fields.receiver, fields.message )
 				end
 
 				if meta:get_string( "is_anonymous" ) == "false" then
